@@ -41,7 +41,7 @@ export function ClaimUsernameForm() {
           {...register('username')}
         />
 
-        <Button size="sm" type="submit">
+        <Button size="sm" type="submit" onClick={() => console.log(errors)}>
           Reservar
           <ArrowRight />
         </Button>

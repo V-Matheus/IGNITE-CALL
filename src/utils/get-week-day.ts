@@ -11,6 +11,3 @@ export function getWeekDays() {
     return formattedDay.charAt(0).toUpperCase() + formattedDay.slice(1);
   });
 }
-
-
-

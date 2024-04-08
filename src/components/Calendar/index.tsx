@@ -8,22 +8,45 @@ import {
   CalendarTitle,
 } from './styles';
 import { getWeekDays } from '@/utils/get-week-day';
+import { useState } from 'react';
+import dayjs from 'dayjs';
 
 export function Calendar() {
+
+  const [currentDate, setCurrentDate] = useState(() => {
+    return dayjs().set('day', 1)
+  })
+
+  function handlePreviousMounth() {
+    const previuosMounthDate = currentDate.subtract(1, 'month')
+
+    setCurrentDate(previuosMounthDate)
+  }
+
+    function handleNextMounth() {
+      const previuosMounthDate = currentDate.add(1, 'month')
+
+      setCurrentDate(previuosMounthDate)
+  }
+
+
   const shortWeekDays = getWeekDays({ short: true });
+
+  const currentMounth = currentDate.format('MMMM')
+  const currentYear = currentDate.format('YYYY')
 
   return (
     <CalendarContainer>
       <CalendarHeader>
         <CalendarTitle>
-          Dezembro <span>2022</span>
+          {currentMounth} <span>{currentYear}</span>
         </CalendarTitle>
 
         <CalendarActions>
-          <button>
+          <button onClick={handlePreviousMounth} title='Previous month'>
             <CaretLeft />
           </button>
-          <button>
+          <button onClick={handleNextMounth} title='Next month'>
             <CaretRight />
           </button>
         </CalendarActions>

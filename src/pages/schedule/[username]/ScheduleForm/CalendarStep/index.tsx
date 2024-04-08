@@ -6,13 +6,17 @@ import {
   TimePickerItem,
   TimePickerList,
 } from './styles';
+import { useState } from 'react';
 
 export function CalendarStep() {
-  const isDateSelected = false;
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const isDateSelected = !!selectedDate;
 
   return (
     <Contaier isTimePickerOpen={isDateSelected}>
-      <Calendar />
+      <Calendar selectedData={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
         <TimePicker>

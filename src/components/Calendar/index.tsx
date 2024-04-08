@@ -22,11 +22,11 @@ interface CalendarWeek {
 type CalendarWeeks = CalendarWeek[];
 
 interface CalendarProps {
-  selectedData?: Date | null;
+  selectedDate?: Date | null;
   onDateSelected: (date: Date) => void;
 }
 
-export function Calendar({ selectedData, onDateSelected }: CalendarProps) {
+export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(() => {
     return dayjs().set('date', 1);
   });

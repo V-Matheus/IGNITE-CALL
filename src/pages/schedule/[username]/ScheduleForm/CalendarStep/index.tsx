@@ -6,52 +6,50 @@ import {
   TimePickerItem,
   TimePickerList,
 } from './styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
 
 interface Availability {
-  possibleTimes: number[]
-  availableTimes: number[]
+  possibleTimes: number[];
+  availableTimes: number[];
 }
 
 export function CalendarStep() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [availability, setAvailability] = useState<Availability | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const router = useRouter();
 
-  const isDateSelected = !!selectedDate
-  const username = String(router.query.username)
+  const isDateSelected = !!selectedDate;
+  const username = String(router.query.username);
 
-  const weekDay = selectedDate ? dayjs(selectedDate).format('dddd') : null
+  const weekDay = selectedDate ? dayjs(selectedDate).format('dddd') : null;
   const describedDate = selectedDate
     ? dayjs(selectedDate).format('DD[ de ]MMMM')
-    : null
+    : null;
 
+  const selectedDateWithoutTime = selectedDate
+    ? dayjs(selectedDate).format('YYYY-MM-DD')
+    : null;
 
-  useEffect(() => {
-    if (!selectedDate) {
-      return;
-    }
+  const { data: availability } = useQuery<Availability>({
+    queryKey: ['availability', selectedDateWithoutTime],
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/users/${username}/availability?date=${selectedDateWithoutTime}`,
+      );
 
-    api
-      .get(`/users/${username}/availability`, {
-        params: {
-          date: dayjs(selectedDate).format('YYYY-MM-DD'),
-        },
-      })
-      .then((response) => {
-        setAvailability(response.data)
-      });
-  }, [selectedDate, username]);
+      return data;
+    },
+  });
 
   function handleSelectTime(hour: number) {
     const dateWithTime = dayjs(selectedDate)
       .set('hour', hour)
       .startOf('hour')
-      .toDate()
+      .toDate();
   }
 
   return (
@@ -74,7 +72,7 @@ export function CalendarStep() {
                 >
                   {String(hour).padStart(2, '0')}:00h
                 </TimePickerItem>
-              )
+              );
             })}
           </TimePickerList>
         </TimePicker>

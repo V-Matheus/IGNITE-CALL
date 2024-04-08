@@ -44,7 +44,7 @@ const timeIntervalsFormSchema = z.object({
         return {
           weekDay: interval.weekDay,
           startTimeInMinutes: convertTimeOnMinutes(interval.startTime),
-          endTimeInMin: convertTimeOnMinutes(interval.endTime),
+          endTimeInMinutes: convertTimeOnMinutes(interval.endTime),
         };
       });
     })
@@ -52,7 +52,7 @@ const timeIntervalsFormSchema = z.object({
       (intervals) => {
         return intervals.every(
           (interval) =>
-            interval.endTimeInMin - 60 >= interval.startTimeInMinutes,
+            interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes,
         );
       },
       {
@@ -99,7 +99,9 @@ export default function TimeInterval() {
   async function handleSetTimeIntervals(data: any) {
     const { intervals } = data as TimeIntervalFormOutput;
 
-    await api.post('/users/time-intervals', {intervals});
+    await api.post('/users/time-intervals', {
+      intervals,
+    });
   }
 
   return (

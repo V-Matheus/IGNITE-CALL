@@ -12,12 +12,16 @@ import { api } from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
+interface CalendarSteapProps {
+  onSelectDatetime: (date: Date) => void;
+}
+
 interface Availability {
   possibleTimes: number[];
   availableTimes: number[];
 }
 
-export function CalendarStep() {
+export function CalendarStep({ onSelectDatetime }: CalendarSteapProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const router = useRouter();
@@ -44,7 +48,7 @@ export function CalendarStep() {
         return data;
       }
 
-      return null
+      return null;
     },
   });
 
@@ -53,6 +57,8 @@ export function CalendarStep() {
       .set('hour', hour)
       .startOf('hour')
       .toDate();
+
+    onSelectDatetime(dateWithTime);
   }
 
   return (

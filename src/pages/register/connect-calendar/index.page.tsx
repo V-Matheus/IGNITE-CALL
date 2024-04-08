@@ -15,7 +15,7 @@ export default function ConnectCalendar() {
 
   async function handleConnectCalendar() {
     await signIn('google')
-  }
+  } 
 
   async function handleNavigateToNextStep() {
     await router.push('/register/time-intervals')

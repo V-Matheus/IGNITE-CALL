@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { getWeekDays } from '@/utils/get-week-day';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { convertTimeOnMinutes } from '@/utils/convert-time-to-minutes';
+import { api } from '@/lib/axios';
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -96,7 +97,9 @@ export default function TimeInterval() {
   const intervals = watch('intervals');
 
   async function handleSetTimeIntervals(data: any) {
-    console.log(data);
+    const { intervals } = data as TimeIntervalFormOutput;
+
+    await api.post('/users/time-intervals', {intervals});
   }
 
   return (

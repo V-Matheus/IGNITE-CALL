@@ -44,7 +44,7 @@ export function CalendarStep() {
         return data;
       }
 
-      return null;
+      return null
     },
   });
 

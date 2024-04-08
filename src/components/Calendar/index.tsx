@@ -25,7 +25,7 @@ interface CalendarWeek {
 type CalendarWeeks = CalendarWeek[];
 
 interface BlockedDates {
-  blockedWeekDays: number[]
+  blockedWeekDays: number[];
 }
 
 interface CalendarProps {
@@ -38,7 +38,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     return dayjs().set('date', 1);
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
   function handlePreviousMounth() {
     const previuosMounthDate = currentDate.subtract(1, 'month');
@@ -57,7 +57,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   const currentMounth = currentDate.format('MMMM');
   const currentYear = currentDate.format('YYYY');
 
-  const username = String(router.query.username)
+  const username = String(router.query.username);
 
   const { data: blockedDates } = useQuery<BlockedDates>({
     queryKey: [
@@ -71,11 +71,12 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
           year: currentDate.get('year'),
           month: currentDate.get('month'),
         },
-      })
+      });
 
-      return response.data
+      return response.data;
     },
-  })
+    enabled: !!selectedDate,
+  });
 
   const calendarWeeks = useMemo(() => {
     const daysInMonthArray = Array.from({
@@ -112,9 +113,11 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
         return { date, disabled: true };
       }),
       ...daysInMonthArray.map((date) => {
-        return { 
-          date, 
-          disabled: date.endOf('day').isBefore(new Date()) || blockedDates?.blockedWeekDays.includes(date.get('day'))
+        return {
+          date,
+          disabled:
+            date.endOf('day').isBefore(new Date()) ||
+            blockedDates?.blockedWeekDays?.includes(date.get('day')),
         };
       }),
       ...nextMonthFillArray.map((date) => {
@@ -129,6 +132,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
         if (isNewWeek) {
           weeks.push({
             week: i / 7 + 1,
+            /* @ts-ignore */
             days: original.slice(i, i + 7),
           });
         }
@@ -175,7 +179,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
                     <td key={date.toString()}>
                       <CalendarDay
                         onClick={() => onDateSelected(date.toDate())}
-                        disabled={disabled} 
+                        disabled={disabled}
                       >
                         {date.get('date')}
                       </CalendarDay>

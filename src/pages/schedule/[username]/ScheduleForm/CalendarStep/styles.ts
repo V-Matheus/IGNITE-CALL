@@ -1,9 +1,12 @@
-import { Box, styled } from "@ignite-ui/react";
+import { Box, styled } from '@ignite-ui/react';
 
 export const Contaier = styled(Box, {
   margin: '$6 auto 0',
   padding: 0,
   display: 'grid',
   maxWidth: '100%',
-  position: 'relative'
-})
+  position: 'relative',
+
+  width: 540,
+  gridTemplateColumns: '1fr',
+});

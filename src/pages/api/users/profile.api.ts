@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth'
+import { unstable_getServerSession } from 'next-auth'
 import { z } from 'zod'
 import { prisma } from '../../../lib/prisma'
 import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 
-const updateProfileBodyScheme = z.object({
-  bio: z.string()
+const updateProfileBodySchema = z.object({
+  bio: z.string(),
 })
 
 export default async function handler(
@@ -16,7 +16,7 @@ export default async function handler(
     return res.status(405).end()
   }
 
-  const session = await getServerSession(
+  const session = await unstable_getServerSession(
     req,
     res,
     buildNextAuthOptions(req, res),
@@ -26,15 +26,15 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const { bio } = updateProfileBodyScheme.parse(req.body)
+  const { bio } = updateProfileBodySchema.parse(req.body)
 
   await prisma.user.update({
     where: {
-      id: session.user.id
+      id: session.user.id,
     },
     data: {
-      bio
-    }
+      bio,
+    },
   })
 
   return res.status(204).end()

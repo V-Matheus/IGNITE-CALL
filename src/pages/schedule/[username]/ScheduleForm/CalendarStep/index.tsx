@@ -1,68 +1,68 @@
-import { Calendar } from '@/components/Calendar';
+import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { Calendar } from '../../../../../components/Calendar'
+import { api } from '../../../../../lib/axios'
 import {
-  Contaier,
+  Container,
   TimePicker,
   TimePickerHeader,
   TimePickerItem,
   TimePickerList,
-} from './styles';
-import { useState } from 'react';
-import dayjs from 'dayjs';
-import { api } from '@/lib/axios';
-import { useRouter } from 'next/router';
-import { useQuery } from '@tanstack/react-query';
-
-interface CalendarSteapProps {
-  onSelectDatetime: (date: Date) => void;
-}
+} from './styles'
 
 interface Availability {
-  possibleTimes: number[];
-  availableTimes: number[];
+  possibleTimes: number[]
+  availableTimes: number[]
 }
 
-export function CalendarStep({ onSelectDatetime }: CalendarSteapProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+interface CalendarStepProps {
+  onSelectDateTime: (date: Date) => void
+}
 
-  const router = useRouter();
+export function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
-  const isDateSelected = !!selectedDate;
-  const username = String(router.query.username);
+  const router = useRouter()
 
-  const weekDay = selectedDate ? dayjs(selectedDate).format('dddd') : null;
+  const isDateSelected = !!selectedDate
+  const username = String(router.query.username)
+
+  const weekDay = selectedDate ? dayjs(selectedDate).format('dddd') : null
   const describedDate = selectedDate
     ? dayjs(selectedDate).format('DD[ de ]MMMM')
-    : null;
+    : null
 
   const selectedDateWithoutTime = selectedDate
     ? dayjs(selectedDate).format('YYYY-MM-DD')
-    : null;
+    : null
 
-  const { data: availability } = useQuery<Availability>({
-    queryKey: ['availability', selectedDateWithoutTime],
-    queryFn: async () => {
-      if (selectedDateWithoutTime) {
-        const { data } = await api.get(
-          `/users/${username}/availability?date=${selectedDateWithoutTime}`,
-        );
-        return data;
-      }
-
-      return null;
-    },
-  });
+    const { data: availability } = useQuery<Availability>({
+      queryKey: ['availability', selectedDateWithoutTime],
+      queryFn: async () => {
+        if (selectedDateWithoutTime) {
+          const { data } = await api.get(
+            `/users/${username}/availability?date=${selectedDateWithoutTime}`,
+          );
+          return data;
+        }
+    
+        return null;
+      },
+    });
 
   function handleSelectTime(hour: number) {
     const dateWithTime = dayjs(selectedDate)
       .set('hour', hour)
       .startOf('hour')
-      .toDate();
+      .toDate()
 
-    onSelectDatetime(dateWithTime);
+    onSelectDateTime(dateWithTime)
   }
 
   return (
-    <Contaier isTimePickerOpen={isDateSelected}>
+    <Container isTimePickerOpen={isDateSelected}>
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
@@ -81,11 +81,13 @@ export function CalendarStep({ onSelectDatetime }: CalendarSteapProps) {
                 >
                   {String(hour).padStart(2, '0')}:00h
                 </TimePickerItem>
-              );
+              )
             })}
           </TimePickerList>
         </TimePicker>
       )}
-    </Contaier>
-  );
+    </Container>
+  )
 }
+
+

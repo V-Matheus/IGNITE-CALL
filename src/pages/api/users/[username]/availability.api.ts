@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prisma';
-import dayjs from 'dayjs';
-import { NextApiRequest, NextApiResponse } from 'next';
+import dayjs from 'dayjs'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { prisma } from '../../../../lib/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,7 +17,7 @@ export default async function handler(
     return res.status(400).json({ message: 'Date no provided.' })
   }
 
-   const user = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       username,
     },
@@ -79,5 +79,5 @@ export default async function handler(
     return !isTimeBlocked && !isTimeInPast
   })
 
-    return res.json({ possibleTimes, availableTimes })
+  return res.json({ possibleTimes, availableTimes })
 }
